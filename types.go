@@ -122,6 +122,20 @@ type ContainerLogStorage struct {
 	EndpointStorage string `json:"enpoint_storage"`   // The name of your endpoint storage. If container log storage is enabled without this parameter, we will try to take the app version endpoint storage. If there is no endpoint storage in your app version, the container logs will not be stored. If we don't find any endpoint storage associated with this name, the container logs will not be stored.
 }
 
+type DeploymentContainerLogs struct {
+	Logs      string               `json:"logs,omitempty"`
+	Encoding  string               `json:"encoding,omitempty"`
+	CrashLogs string               `json:"crash_logs,omitempty"`
+	CrashData []ContainerCrashData `json:"crash_data,omitempty"`
+	LogsLink  string               `json:"logs_link,omitempty"`
+}
+
+type ContainerCrashData struct {
+	ExitCode     int    `json:"exit_code,omitempty"`
+	Message      string `json:"message,omitempty"`
+	RestartCount int    `json:"restart_count"`
+}
+
 type ErrorResponse struct {
 	Message string `json:"message"`
 }

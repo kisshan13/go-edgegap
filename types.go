@@ -3,6 +3,8 @@ package edgegap
 import "github.com/go-resty/resty/v2"
 
 type Version string
+type Protocol string
+type BuildType string
 
 type EField string
 type EFilterType string
@@ -10,6 +12,21 @@ type ESortStrategy string
 
 const (
 	VersionOne = Version("v1")
+)
+
+const (
+	ProtocolTCP       = Protocol("TCP")
+	ProtocolUDP       = Protocol("UDP")
+	ProtocolTCPAndUDP = Protocol("TPC/UDP")
+	ProtocolHTTP      = Protocol("HTTP")
+	ProtocolHTTPS     = Protocol("HTTPS")
+	ProtocolWS        = Protocol("WS")
+	ProtocolWSS       = Protocol("WSS")
+)
+
+const (
+	DevelopmentBuild      = BuildType("Development")
+	DevelopmentProduction = BuildType("Production")
 )
 
 const (

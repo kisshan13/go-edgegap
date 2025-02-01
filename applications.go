@@ -51,9 +51,34 @@ type ApplicationProbe struct {
 	RejectedPing int `json:"rejected_ping,omitempty"` // Your reject value for Latency
 }
 
+type ApplicationList struct {
+	Applications []Application `json:"applications"` // List of applications
+}
+
 type ApplicationVersionCreateResponse struct {
 	Success bool               `json:"success"`
 	Version ApplicationVersion `json:"version"`
+}
+
+type ApplicationACLCreateResponse struct {
+	Success        bool           `json:"success"`
+	WhiteListEntry ApplicationACL `json:"whitelist_entry"`
+}
+
+type ApplicationACLEntries struct {
+	WhitelistEntries []ApplicationACL `json:"whitelist_entries"`
+}
+
+type ApplicationVersionList struct {
+	Versions   []ApplicationVersion `json:"versions"`
+	TotalCount int                  `json:"total_count"`
+}
+
+type ApplicationACL struct {
+	ID       string `json:"id,omitempty"`
+	CIDR     string `json:"cidr"`                // CIDR to allow
+	Label    string `json:"label,omitempty"`     // Label to organized your entries
+	IsActive bool   `json:"is_active,omitempty"` // If the Rule will be applied on runtime
 }
 
 type ApplicationVersion struct {
@@ -155,5 +180,59 @@ func (e *EdgegapClient) ApplicationUpdateVersion(appName string, version string,
 
 	return makeRequest(e, func(c *resty.Request) (*resty.Response, error) {
 		return c.Patch(fmt.Sprintf("/app/%s/version/%s", appName, version))
+	}, &response)
+}
+
+// Create an access control list entry for an app version. This will allow the specified CIDR to connect to the deployment. The option whitelisting_active must be activated in the application version.
+func (e *EdgegapClient) ApplicationCreateACLEntry(appName string, version string, data ApplicationACL) (*Response[ApplicationACLCreateResponse], error) {
+	var response ApplicationACLCreateResponse
+
+	return makeRequest(e, func(c *resty.Request) (*resty.Response, error) {
+		return c.SetBody(data).Post(fmt.Sprintf("/app/%s/version/%s/whitelist", appName, version))
+	}, &response)
+}
+
+// List all the access control list entries for a specific application version.
+func (e *EdgegapClient) ApplicationACLEntries(appName string, version string) (*Response[ApplicationACLEntries], error) {
+	var response ApplicationACLEntries
+
+	return makeRequest(e, func(c *resty.Request) (*resty.Response, error) {
+		return c.Get(fmt.Sprintf("/app/%s/version/%s/whitelist", appName, version))
+	}, &response)
+}
+
+// Delete an access control list entry for a specific application version
+func (e *EdgegapClient) ApplicationDeleteACL(appName string, version string, entryId string) (*Response[ApplicationACLCreateResponse], error) {
+	var response ApplicationACLCreateResponse
+
+	return makeRequest(e, func(c *resty.Request) (*resty.Response, error) {
+		return c.Delete(fmt.Sprintf("/app/%s/version/%s/whitelist/%s", appName, version, entryId))
+	}, &response)
+}
+
+// Retrieve a specific access control list entry for an application version.
+func (e *EdgegapClient) ApplicationGetACLById(appName string, version string, entryId string) (*Response[ApplicationACL], error) {
+	var response ApplicationACL
+
+	return makeRequest(e, func(c *resty.Request) (*resty.Response, error) {
+		return c.Get(fmt.Sprintf("/app/%s/version/%s/whitelist/%s", appName, version, entryId))
+	}, &response)
+}
+
+// List all versions of a specific application.
+func (e *EdgegapClient) ApplicationListVersion(appName string) (*Response[ApplicationVersionList], error) {
+	var response ApplicationVersionList
+
+	return makeRequest(e, func(c *resty.Request) (*resty.Response, error) {
+		return c.Get(fmt.Sprintf("/app/%s/versions", appName))
+	}, &response)
+}
+
+// List all the applications that you own.
+func (e *EdgegapClient) ApplicationGetList() (*Response[ApplicationList], error) {
+	var response ApplicationList
+
+	return makeRequest(e, func(c *resty.Request) (*resty.Response, error) {
+		return c.Get("/apps")
 	}, &response)
 }

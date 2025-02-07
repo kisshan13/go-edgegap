@@ -128,11 +128,17 @@ type PortDetails struct {
 	Proxy      int    `json:"proxy,omitempty"`
 }
 
-type Session struct {
+type DeploymentSession struct {
 	SessionID string `json:"session_id"` // Unique UUID
 	Status    string `json:"status"`     // Current status of the session
 	Ready     bool   `json:"ready"`      // If the session is linked to a Ready deployment
 	Linked    bool   `json:"linked"`     // If the session is linked to a deployment
 	Kind      string `json:"kind"`       // Type of session created
 	UserCount int    `json:"user_count"` // Count of user this session currently have
+}
+
+type SelectorModel struct {
+	Tag     string      `json:"tag"`      // The Tag to filter potential Deployment with this Selector
+	TagOnly bool        `json:"tag_only"` // If True, will not try to filter Deployment and only tag the Session
+	Env     EnvVariabls `json:"evn"`      // Environment Variable to inject in new Deployment created by App Version with auto-deploy
 }

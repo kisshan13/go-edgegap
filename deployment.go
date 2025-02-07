@@ -38,7 +38,7 @@ type DeploymentInfo struct {
 	ErrorDetails       bool                   `json:"error_details"`       // The error details of the Deployment
 	Ports              map[string]PortDetails `json:"ports"`
 	PublicIP           string                 `json:"public_ip"` // The public IP
-	Sessions           []Session              `json:"sessions"`  // List of Active Sessions if Deployment App is Session Based
+	Sessions           []DeploymentSession    `json:"sessions"`  // List of Active Sessions if Deployment App is Session Based
 	Location           Location               `json:"location"`
 	Tags               []string               `json:"tags"`          // List of tags associated with the deployment
 	Sockets            int                    `json:"sockets"`       // The Capacity of the Deployment

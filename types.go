@@ -145,3 +145,8 @@ type SelectorModel struct {
 	TagOnly bool        `json:"tag_only"` // If True, will not try to filter Deployment and only tag the Session
 	Env     EnvVariabls `json:"evn"`      // Environment Variable to inject in new Deployment created by App Version with auto-deploy
 }
+
+type Credentials struct {
+	Username string `json:"username"` // Username for the component's private repository.
+	Token    string `json:"token"`    // Password (token) of the component's private repository.
+}

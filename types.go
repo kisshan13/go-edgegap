@@ -36,6 +36,9 @@ const (
 	ERegion        = EField("region")
 	EAdminDivision = EField("administrative_division")
 	ELocationTags  = EField("location_tags")
+	ESessionID     = EField("session_id")
+	EDeploymentTag = EField("deployment_tags")
+	ERequestID     = EField("request_id")
 
 	EAny = EFilterType("any")
 	EAll = EFilterType("all")

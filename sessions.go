@@ -61,6 +61,14 @@ type SessionDeleteRes struct {
 	CustomID  string `json:"custom_id"`  // Custom ID if Available
 }
 
+type SessionUserRes struct {
+	Users []SessionUser `json:"session_users"` // Users in the session
+}
+
+type SessionBulkDeleteRes struct {
+	Processable []string `json:"processable"` // A list sessions that can be processed to be stopped
+}
+
 type SessionUser struct {
 	IP        string `json:"ip"`
 	Latitude  int    `json:"latitude"`
@@ -91,5 +99,56 @@ func (e *EdgegapClient) SessionGet(id string) (*Response[Session], error) {
 
 	return makeRequest(e, func(c *resty.Request) (*resty.Response, error) {
 		return c.Get(fmt.Sprintf("/session/%s", id))
+	}, &response)
+}
+
+// Add specified users to a session.
+func (e *EdgegapClient) SessionPutUsers(id string, ips []string) (*Response[SessionUserRes], error) {
+	var response SessionUserRes
+
+	return makeRequest(e, func(c *resty.Request) (*resty.Response, error) {
+		return c.SetBody(map[string][]string{
+			"ip_list": ips,
+		}).Put(fmt.Sprintf("/session/%s/users", id))
+	}, &response)
+}
+
+// Remove specified users from a session.
+func (e *EdgegapClient) SessionDeleteUsers(id string, ips []string) (*Response[SessionUserRes], error) {
+	var response SessionUserRes
+
+	return makeRequest(e, func(c *resty.Request) (*resty.Response, error) {
+		return c.SetBody(map[string][]string{
+			"ip_list": ips,
+		}).Delete(fmt.Sprintf("/session/%s/users", id))
+	}, &response)
+}
+
+// List all users of session.
+func (e *EdgegapClient) SessionGetUsers(id string) (*Response[SessionUserRes], error) {
+	var response SessionUserRes
+
+	return makeRequest(e, func(c *resty.Request) (*resty.Response, error) {
+		return c.Get(fmt.Sprintf("/session/%s/users", id))
+	}, &response)
+}
+
+// List all the active sessions.
+func (e *EdgegapClient) SessionListAll() (*Response[ResponseBody[Session]], error) {
+	var response ResponseBody[Session]
+
+	return makeRequest(e, func(c *resty.Request) (*resty.Response, error) {
+		return c.Get("/session")
+	}, &response)
+}
+
+// Make a bulk delete of sessions using filters. All the sessions matching the given filters will be permanently deleted.
+func (e *EdgegapClient) SessionBulkDelete(filters []Filter) (*Response[SessionBulkDeleteRes], error) {
+	var response SessionBulkDeleteRes
+
+	return makeRequest(e, func(c *resty.Request) (*resty.Response, error) {
+		return c.SetBody(map[string]interface{}{
+			"filters": filters,
+		}).Post("/sessions/bulk-stop")
 	}, &response)
 }

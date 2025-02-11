@@ -1,3 +1,7 @@
+// Applications
+// Applications Control API - Please refer to this documentation (https://docs.edgegap.com/docs/application) to get started with applications.
+// API Reference - https://docs.edgegap.com/api/#tag/Applications
+
 package edgegap
 
 import (

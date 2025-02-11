@@ -1,3 +1,7 @@
+// Deployments
+// Deployments Control API - Please refer to this documentation (https://docs.edgegap.com/docs/deployment) to get started with deployments.
+// API Reference - https://docs.edgegap.com/api/#tag/Deployments
+
 package edgegap
 
 import (

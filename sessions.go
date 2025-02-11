@@ -1,5 +1,6 @@
 // Sessions Control API
 // Please refer to this documentation (https://docs.edgegap.com/docs/deployment/session) to get started with sessions.
+// API Reference - https://docs.edgegap.com/api/#tag/Sessions
 
 package edgegap
 

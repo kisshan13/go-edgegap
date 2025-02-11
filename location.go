@@ -1,3 +1,7 @@
+// Locations
+// Locations API - Please refer to this documentation (https://docs.edgegap.com/docs/deployment/locations/beacons) to get started with locations beacons.
+// API Reference - https://docs.edgegap.com/api/#tag/Locations
+
 package edgegap
 
 import (
